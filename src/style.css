@@ -19,6 +19,7 @@
   --naranja-suave: #fff4ea;  /* fondo de opción elegida */
   --naranja-borde: #ffc28a;
   --barra-fondo: rgb(247 248 250 / .92);
+  --halo-opacidad: .14;      /* manchas de color de la portada */
   color-scheme: light;
   --radio: 14px;
   font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
@@ -45,6 +46,7 @@
   --naranja-suave: rgb(255 122 0 / .12);
   --naranja-borde: rgb(255 122 0 / .5);
   --barra-fondo: rgb(11 18 32 / .9);
+  --halo-opacidad: .45;
   color-scheme: dark;
 }
 

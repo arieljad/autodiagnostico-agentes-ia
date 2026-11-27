@@ -21,7 +21,7 @@ function empezar(nueva) {
     <div class="halo halo-a" aria-hidden="true"></div>
     <div class="halo halo-b" aria-hidden="true"></div>
     <div class="contenedor contenido">
-      <LogoParadigma claro :alto="34" class="logo-hero" />
+      <LogoParadigma :alto="34" class="logo-hero" />
       <span class="etiqueta">Autodiagnóstico · 10 minutos</span>
       <h1>¿Qué tan madura es tu organización en <em>agentes de IA</em>?</h1>
       <p class="bajada">{{ ENCUESTA.descripcion }}</p>
@@ -30,7 +30,7 @@ function empezar(nueva) {
         <button class="boton" @click="empezar(!hayBorrador)">
           {{ hayBorrador ? 'Continuar donde dejé' : 'Comenzar el diagnóstico' }} <span aria-hidden="true">→</span>
         </button>
-        <button v-if="hayBorrador" class="boton secundario claro" @click="empezar(true)">Empezar de nuevo</button>
+        <button v-if="hayBorrador" class="boton secundario" @click="empezar(true)">Empezar de nuevo</button>
       </div>
 
       <ul class="beneficios">
@@ -51,31 +51,29 @@ function empezar(nueva) {
 <style scoped>
 .hero {
   position: relative; overflow: hidden; min-height: 100vh;
-  background: var(--oscuro); color: var(--sobre-oscuro); display: flex; align-items: center;
+  background: var(--fondo); color: var(--tinta); display: flex; align-items: center;
   padding: 72px 0;
 }
-.halo { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .45; }
+.halo { position: absolute; border-radius: 50%; filter: blur(90px); opacity: var(--halo-opacidad); }
 .halo-a { width: 520px; height: 520px; right: -140px; top: -160px; background: var(--naranja); }
 .halo-b { width: 360px; height: 360px; left: -160px; bottom: -160px; background: var(--rojo); }
 .contenido { position: relative; }
 .logo-hero { display: flex; width: fit-content; margin-bottom: 40px; }
 h1 { font-size: clamp(36px, 6vw, 64px); max-width: 820px; margin: 16px 0 20px; font-weight: 800; letter-spacing: -.02em; }
 h1 em { font-style: normal; color: var(--naranja); }
-.bajada { font-size: 18px; color: var(--sobre-oscuro-2); max-width: 640px; margin: 0 0 32px; }
+.bajada { font-size: 18px; color: var(--tinta-2); max-width: 640px; margin: 0 0 32px; }
 .acciones { display: flex; gap: 12px; flex-wrap: wrap; }
-.boton.secundario.claro { color: var(--sobre-oscuro); border-color: rgb(255 255 255 / .3); }
-.boton.secundario.claro:hover { background: rgb(255 255 255 / .08); }
 .beneficios {
   list-style: none; padding: 0; margin: 48px 0 28px;
   display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 820px;
 }
 .beneficios li {
   display: flex; flex-direction: column; gap: 6px; padding: 18px 20px;
-  border-radius: var(--radio); background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .1);
-  backdrop-filter: blur(6px);
+  border-radius: var(--radio); background: var(--tarjeta); border: 1px solid var(--borde);
+  box-shadow: 0 6px 20px rgb(16 32 56 / .05);
 }
-.beneficios span { color: var(--sobre-oscuro-2); font-size: 14px; }
+.beneficios span { color: var(--tinta-2); font-size: 14px; }
 .dimensiones { display: flex; flex-wrap: wrap; gap: 8px; max-width: 820px; }
-.chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .18); color: var(--sobre-oscuro); }
-.privacidad { margin-top: 28px; font-size: 13px; color: var(--sobre-oscuro-3); max-width: 640px; }
+.chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--tinta-2); }
+.privacidad { margin-top: 28px; font-size: 13px; color: var(--tinta-3); max-width: 640px; }
 </style>
