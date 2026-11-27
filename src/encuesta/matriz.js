@@ -1,17 +1,19 @@
 // Modelo de madurez basado en "Matriz de madurez en agentes de IA - v3.xlsx".
 //
-// - Cinco niveles acumulativos: para estar en el nivel 3 hay que cumplir los
-//   niveles 1, 2 y 3.
 // - Cada ítem de la matriz (N1-ROL-01, N2-OBS-01, …) pertenece a un nivel y a una
 //   dimensión, y se da por cumplido según la respuesta a una pregunta de la encuesta.
 //   Solo están los ítems de la matriz que la encuesta actual permite evaluar.
-// - Un nivel se cumple con al menos UMBRAL de sus ítems en Sí. El Excel usa 100%
-//   por defecto y sugiere 80% como alternativa; acá se usa 80% porque la encuesta
-//   evalúa menos ítems por nivel que la matriz completa.
+// - Puntaje ponderado de 0 a 5: cada nivel suma su proporción de ítems cumplidos,
+//   pero un nivel nunca suma más que el anterior (los niveles son acumulativos).
+//   Ej.: 100%, 86%, 64%, 20%, 0% → 1 + 0,86 + 0,64 + 0,2 + 0 = 2,7. Así un "No"
+//   resta en proporción y no hace caer el resultado de golpe.
+// - Un nivel se alcanza al completar UMBRAL (80%) de su tramo del puntaje:
+//   0,8 → nivel 1; 2,7 → nivel 2 (camino al 3); 2,8 → nivel 3.
 // - Tope por agentes en producción (como la P-01 del Excel): el nivel 2 requiere
-//   al menos un caso de uso en producción; los niveles 3 a 5, al menos dos. Se
-//   cuentan los casos de uso de la industria marcados "En producción"; con
-//   industria "Otra", la respuesta a la pregunta p85.
+//   al menos un caso de uso en producción; los niveles 3 a 5, al menos dos. Los
+//   niveles por encima del tope no suman. Se cuentan los casos de uso de la
+//   industria marcados "En producción"; con industria "Otra", la respuesta a la
+//   pregunta p85.
 
 import { ESTADO_OTRA, ENCUESTA, todasLasPreguntas } from './definicion.js'
 
@@ -167,17 +169,28 @@ export function evaluarMatriz(respuestas) {
   const maximo = nivelMaximo(enProduccion)
   const evaluados = ITEMS.map((it) => ({ ...it, cumplido: Boolean(it.cumple(respuestas)) }))
 
-  let alcanzado = 0
-  const niveles = NIVELES.map((n) => {
+  // Aporte de cada nivel al puntaje: su proporción de ítems cumplidos, sin superar
+  // la del nivel anterior. Se calcula también sin el tope para avisar si limita.
+  let previo = 1
+  let previoSinTope = 1
+  const parciales = NIVELES.map((n) => {
     const items = evaluados.filter((it) => it.nivel === n.nivel)
     const si = items.filter((it) => it.cumplido).length
-    const pct = Math.round((si / items.length) * 100)
-    const porItems = si / items.length >= UMBRAL
-    const porAgentes = n.nivel <= maximo
-    const cumplido = porItems && porAgentes && alcanzado === n.nivel - 1
-    if (cumplido) alcanzado = n.nivel
-    return { ...n, items: items.length, si, pct, cumplido, limitadoPorAgentes: porItems && !porAgentes }
+    const proporcion = si / items.length
+    previoSinTope = Math.min(proporcion, previoSinTope)
+    previo = n.nivel <= maximo ? Math.min(proporcion, previo) : 0
+    return { ...n, items: items.length, si, pct: Math.round(proporcion * 100), aporte: previo, aporteSinTope: previoSinTope }
   })
+  const redondear = (x) => Math.round(x * 10) / 10
+  const puntaje = redondear(parciales.reduce((t, n) => t + n.aporte, 0))
+  const puntajeSinTope = redondear(parciales.reduce((t, n) => t + n.aporteSinTope, 0))
+  const nivelDe = (p) => Math.floor(redondear(p + 1 - UMBRAL))
+  const alcanzado = nivelDe(puntaje)
+  const niveles = parciales.map(({ aporte, aporteSinTope, ...n }) => ({
+    ...n,
+    cumplido: n.nivel <= alcanzado,
+    limitadoPorAgentes: n.nivel > maximo && aporteSinTope > 0,
+  }))
 
   const dimensiones = DIMENSIONES.map((d) => {
     const items = evaluados.filter((it) => it.dim === d.id)
@@ -190,8 +203,9 @@ export function evaluarMatriz(respuestas) {
   })
 
   const siguiente = NIVELES.find((n) => n.nivel === alcanzado + 1) ?? null
+  // Lo que falta hasta el próximo nivel, incluidos los huecos de niveles anteriores.
   const pendientes = siguiente
-    ? evaluados.filter((it) => it.nivel === siguiente.nivel && !it.cumplido)
+    ? evaluados.filter((it) => it.nivel <= siguiente.nivel && !it.cumplido)
       .map(({ id, capacidad, porQue, dim }) => ({ id, capacidad, porQue, dimension: DIM[dim] }))
     : []
   const fortalezas = evaluados.filter((it) => it.cumplido && it.nivel > alcanzado)
@@ -199,13 +213,13 @@ export function evaluarMatriz(respuestas) {
 
   return {
     nivel: alcanzado ? NIVELES[alcanzado - 1] : SIN_NIVEL,
+    puntaje,
     niveles,
     dimensiones,
     siguiente,
     pendientes,
     fortalezas,
     casosEnProduccion: enProduccion,
-    topeAgentes: maximo < 5 && niveles.some((n) => n.limitadoPorAgentes),
-    umbral: UMBRAL,
+    topeAgentes: nivelDe(puntajeSinTope) > alcanzado,
   }
 }

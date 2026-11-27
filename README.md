@@ -48,22 +48,26 @@ Las preguntas Sí / No / No sé consecutivas se muestran juntas en una grilla.
 
 ## Cómo se calcula el nivel
 
-Igual que la hoja `Resultado` del Excel v3:
+Basado en la hoja `Resultado` del Excel v3, con un puntaje ponderado en lugar del corte por nivel:
 
 - Cinco niveles acumulativos: Exploración, Primeros agentes, Agentes gestionados,
   Agentes coordinados y Conocimiento integrado.
 - Cada ítem de la matriz (N1-ROL-01, N3-OBS-02, …) se da por cumplido según una
   respuesta. Están los 40 ítems de la matriz (de 58) que la encuesta evalúa.
-- Un nivel se cumple con al menos el 80% de sus ítems (`UMBRAL` en `matriz.js`;
-  el Excel usa 100% por defecto) y si los anteriores también se cumplen.
+- Puntaje ponderado de 0 a 5: cada nivel suma su proporción de ítems cumplidos,
+  pero nunca más que el nivel anterior (son acumulativos). Ej.: 100%, 86%, 64%,
+  20% y 0% dan 1 + 0,86 + 0,64 + 0,2 + 0 = 2,7. Un "No" resta en proporción.
+- Un nivel se alcanza al completar el 80% de su tramo (`UMBRAL` en `matriz.js`):
+  0,8 → nivel 1; 2,7 → nivel 2; 2,8 → nivel 3.
 - Tope por agentes en producción (la P-01 del Excel), contando los casos de uso
   de la industria marcados "En producción" (con industria "Otra", la pregunta
-  p85): con ninguno, máximo nivel 1; con uno, máximo nivel 2.
+  p85): con ninguno, máximo nivel 1; con uno, máximo nivel 2. Los niveles por
+  encima del tope no suman al puntaje.
 - Punto de control (como en el Excel): sin casos en piloto ni en producción, la
   encuesta se acorta a contexto, gobierno, conocimiento y contacto (~20 preguntas).
 - Sin responder cuenta como No.
 
-El resultado público muestra solo el nivel y la escalera; el informe completo
+El resultado público muestra el puntaje, el nivel y la escalera; el informe completo
 (capacidades pendientes, dimensiones, casos de uso) queda guardado y el endpoint
 público no lo devuelve. Tampoco hay comparación con la industria: eso se presenta en la
 reunión (botón "Agendar una reunión", link en `VITE_AGENDA_URL`).

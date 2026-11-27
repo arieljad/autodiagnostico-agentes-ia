@@ -13,13 +13,17 @@ onMounted(async () => {
 })
 
 const r = computed(() => datos.value?.resultado)
+// Puntaje ponderado de 0 a 5 (los diagnósticos guardados antes del puntaje usan el nivel).
+const puntaje = computed(() => r.value?.puntaje ?? r.value?.nivel.nivel ?? 0)
+const puntajeTexto = computed(() => puntaje.value.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }))
+const proximo = computed(() => r.value?.niveles.find((n) => n.nivel === r.value.nivel.nivel + 1) ?? null)
 
 // Link para agendar (Microsoft Bookings, Calendly, etc.). Si no está configurado,
 // abre un correo con el asunto ya armado.
 const agenda = computed(() => {
   if (import.meta.env.VITE_AGENDA_URL) return import.meta.env.VITE_AGENDA_URL
   const asunto = `Reunión · Autodiagnóstico de agentes de IA${datos.value?.empresa ? ` · ${datos.value.empresa}` : ''}`
-  const cuerpo = `Hola, completé el autodiagnóstico (nivel ${r.value?.nivel.nivel} · ${r.value?.nivel.nombre}) y me gustaría agendar una reunión para conocer el informe completo.\n\n${location.href}`
+  const cuerpo = `Hola, completé el autodiagnóstico (puntaje ${puntajeTexto.value} de 5 · nivel ${r.value?.nivel.nivel} · ${r.value?.nivel.nombre}) y me gustaría agendar una reunión para conocer el informe completo.\n\n${location.href}`
   return `mailto:contacto@paradigma.com?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`
 })
 
@@ -28,6 +32,8 @@ const SEGMENTOS = 5
 const RADIO = 72
 const circ = 2 * Math.PI * RADIO
 const largo = circ / SEGMENTOS - 6
+// Parte llena del segmento i (1 a 5) según el puntaje.
+const lleno = (i) => Math.min(Math.max(puntaje.value - (i - 1), 0), 1) * largo
 
 // Contenido de muestra para la vista previa difuminada: es genérico a propósito,
 // el informe real no se envía al navegador.
@@ -65,28 +71,37 @@ const INCLUYE = [
           <h1 v-if="r.nivel.nivel">Nivel {{ r.nivel.nivel }} · <em>{{ r.nivel.nombre }}</em></h1>
           <h1 v-else><em>{{ r.nivel.nombre }}</em></h1>
           <p>{{ r.nivel.descripcion }}</p>
+          <p v-if="proximo" class="proximo">Próximo nivel: <strong>{{ proximo.nombre }}</strong></p>
           <p v-if="r.topeAgentes" class="aviso">
             Tus respuestas cumplen capacidades de niveles más altos, pero el nivel también depende de cuántos casos de uso
             tenés en producción ({{ r.casosEnProduccion === 0 ? 'ninguno' : r.casosEnProduccion === 1 ? 'uno' : r.casosEnProduccion }}).
           </p>
           <a class="boton" :href="agenda" target="_blank" rel="noopener">Agendar una reunión →</a>
         </div>
-        <div class="anillo" :aria-label="`Nivel ${r.nivel.nivel} de 5`">
+        <div class="anillo" :aria-label="`Puntaje ${puntajeTexto} de 5`">
           <svg viewBox="0 0 180 180">
-            <circle
-              v-for="i in SEGMENTOS" :key="i" cx="90" cy="90" :r="RADIO"
-              :class="i <= r.nivel.nivel ? 'seg-on' : 'seg-off'"
-              :stroke-dasharray="`${largo} ${circ - largo}`" :stroke-dashoffset="-(i - 1) * (circ / SEGMENTOS)"
-            />
+            <template v-for="i in SEGMENTOS" :key="i">
+              <circle
+                class="seg-off" cx="90" cy="90" :r="RADIO"
+                :stroke-dasharray="`${largo} ${circ - largo}`" :stroke-dashoffset="-(i - 1) * (circ / SEGMENTOS)"
+              />
+              <circle
+                v-if="lleno(i) > 0" class="seg-on" cx="90" cy="90" :r="RADIO"
+                :stroke-dasharray="`${lleno(i)} ${circ - lleno(i)}`" :stroke-dashoffset="-(i - 1) * (circ / SEGMENTOS)"
+              />
+            </template>
           </svg>
-          <div class="numero"><strong>{{ r.nivel.nivel }}</strong><span>de 5</span></div>
+          <div class="numero"><strong>{{ puntajeTexto }}</strong><span>de 5</span></div>
         </div>
       </div>
     </section>
 
     <section class="contenedor cuerpo">
       <h2 class="subtitulo">Tu escalera de madurez</h2>
-      <p class="nota">Los niveles son acumulativos: para alcanzar uno hay que cumplir los anteriores.</p>
+      <p class="nota">
+        Cada nivel suma a tu puntaje según cuántas de sus capacidades cumplís. Los niveles son acumulativos: uno
+        nunca suma más que el anterior.
+      </p>
       <ol class="escalera">
         <li v-for="n in r.niveles" :key="n.nivel" :class="{ alcanzado: n.cumplido }">
           <span class="esc-num">{{ n.nivel }}</span>
@@ -140,6 +155,8 @@ const INCLUYE = [
 h1 { font-size: clamp(34px, 5vw, 52px); margin: 12px 0; font-weight: 800; letter-spacing: -.02em; }
 h1 em { font-style: normal; color: var(--naranja); }
 .cabecera p { color: #c9ccd6; font-size: 17px; max-width: 600px; margin: 0 0 20px; }
+.cabecera .proximo { font-size: 15px; color: #8d92a0; margin-top: -8px; }
+.cabecera .proximo strong { color: #fff; }
 .cabecera .aviso { font-size: 14px; color: #f3c79c; }
 .anillo { position: relative; width: 210px; height: 210px; }
 .anillo svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -147,7 +164,7 @@ h1 em { font-style: normal; color: var(--naranja); }
 .seg-off { stroke: rgb(255 255 255 / .1); }
 .seg-on { stroke: var(--naranja); }
 .numero { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
-.numero strong { font-size: 64px; line-height: 1; }
+.numero strong { font-size: 56px; line-height: 1; font-variant-numeric: tabular-nums; }
 .numero span { color: #8d92a0; font-size: 14px; }
 
 .cuerpo { padding: 20px 0 80px; }

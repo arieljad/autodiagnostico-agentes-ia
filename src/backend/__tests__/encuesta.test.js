@@ -134,13 +134,35 @@ describe('nivel de madurez (matriz v3)', () => {
     expect(uno.fortalezas.length).toBeGreaterThan(0)
   })
 
-  it('da un nivel por cumplido con el 80% de sus capacidades, y los niveles son acumulativos', () => {
-    expect(calcularResultado(conNo('p49', 'p67')).nivel.nivel).toBe(5) // 9 de 11 en el nivel 3
+  it('pondera el puntaje: cada nivel suma su proporción, sin superar la del anterior', () => {
+    expect(calcularResultado(maximas).puntaje).toBe(5)
+    // 9 de 11 en el nivel 3: los niveles 4 y 5 suman como mucho lo mismo que el 3.
+    const nueve = calcularResultado(conNo('p49', 'p67'))
+    expect(nueve.puntaje).toBe(4.5) // 1 + 1 + 3 × 9/11
+    expect(nueve.nivel.nivel).toBe(4)
+    // Un "No" más resta en proporción, no hace caer el nivel de golpe.
     const r = calcularResultado(conNo('p49', 'p67', 'p87')) // 8 de 11 en el nivel 3
-    expect(r.nivel.nivel).toBe(2)
-    expect(r.siguiente.nivel).toBe(3)
+    expect(r.puntaje).toBe(4.2)
+    expect(r.nivel.nivel).toBe(4)
+    expect(r.siguiente.nivel).toBe(5)
     expect(r.pendientes.map((p) => p.id)).toEqual(['N3-GOB-01', 'N3-ROL-02', 'N3-OBS-01'])
-    expect(r.niveles[3].pct).toBe(100) // el nivel 4 está completo, pero no cuenta sin el 3
+    expect(r.niveles[3].pct).toBe(100)
+  })
+
+  it('un nivel se alcanza con el 80% de su tramo del puntaje', () => {
+    const sinAgentes = { p11: 'En piloto', p12: 'En evaluación' }
+    const unNo = calcularResultado({ ...conNo('p86'), ...sinAgentes }) // 4 de 5 en el nivel 1
+    expect(unNo.puntaje).toBe(0.8)
+    expect(unNo.nivel.nivel).toBe(1)
+    const dosNo = calcularResultado({ ...conNo('p86', 'p69'), ...sinAgentes }) // 3 de 5
+    expect(dosNo.puntaje).toBe(0.6)
+    expect(dosNo.nivel.nivel).toBe(0)
+  })
+
+  it('el tope por agentes en producción corta el puntaje', () => {
+    const uno = calcularResultado({ ...maximas, p12: 'En piloto' })
+    expect(uno.puntaje).toBe(2)
+    expect(calcularResultado({ ...maximas, p11: 'En piloto', p12: 'En evaluación' }).puntaje).toBe(1)
   })
 
   it('arma la matriz dimensión × nivel', () => {
@@ -172,6 +194,7 @@ describe('API', () => {
     const ver = await request(app).get(`/api/respuestas/${res.body.id}/resultado`)
     expect(ver.status).toBe(200)
     expect(ver.body.resultado.nivel.nivel).toBe(5)
+    expect(ver.body.resultado.puntaje).toBe(5)
     expect(ver.body.resultado.niveles).toHaveLength(5)
   })
 

@@ -12,6 +12,7 @@ const IDS_VALIDOS = new Set(todasLasPreguntas().map((p) => p.id))
 /** Lo que se muestra al encuestado: nivel alcanzado y avance de cada nivel. */
 export const resumenPublico = (r) => ({
   nivel: r.nivel,
+  puntaje: r.puntaje,
   niveles: r.niveles.map(({ nivel, nombre, descripcion, items, si, pct, cumplido }) => ({ nivel, nombre, descripcion, items, si, pct, cumplido })),
   topeAgentes: r.topeAgentes,
   casosEnProduccion: r.casosEnProduccion,
