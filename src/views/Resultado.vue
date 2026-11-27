@@ -48,10 +48,10 @@ const MUESTRA_MATRIZ = [
   ['parcial', 'si', 'no', 'no', 'no'], ['si', 'parcial', 'parcial', 'parcial', 'no'],
 ]
 const INCLUYE = [
+  'Cómo te comparás con el promedio de tu industria y de organizaciones de tu tamaño',
+  'Tu cumplimiento en cada dimensión: gobierno, equipos, tecnología, conocimiento, observabilidad, seguridad y costos',
   'Las capacidades que te faltan para el próximo nivel y por dónde empezar',
-  'Tu cumplimiento por dimensión: gobierno, roles, tecnología, conocimiento, observabilidad, seguridad y costos',
-  'Cómo te posicionás frente a otras organizaciones de tu industria',
-  'Una hoja de ruta para evolucionar tu capa agéntica',
+  'Iniciativas concretas para fortalecer tu capa agéntica, alineadas con los objetivos estratégicos de tu empresa',
 ]
 </script>
 
@@ -135,8 +135,11 @@ const INCLUYE = [
               <rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
             </svg>
           </div>
-          <h2>Tu informe completo te espera</h2>
-          <p>Lo revisamos juntos en una reunión con nuestro equipo. Incluye:</p>
+          <h2>Llevemos tu diagnóstico un paso más allá</h2>
+          <p>
+            Si te interesa, agendamos una reunión y preparamos un informe hecho a la medida de tu organización.
+            Lo revisamos juntos e incluye:
+          </p>
           <ul>
             <li v-for="t in INCLUYE" :key="t">{{ t }}</li>
           </ul>
@@ -149,14 +152,14 @@ const INCLUYE = [
 
 <style scoped>
 .vacio { padding: 120px 0; display: grid; gap: 24px; justify-items: start; }
-.cabecera { background: var(--oscuro); color: #fff; padding: 32px 0 56px; }
+.cabecera { background: var(--oscuro); color: var(--sobre-oscuro); border-bottom: 1px solid var(--borde-oscuro); padding: 32px 0 56px; }
 .logo-cabecera { display: flex; width: fit-content; margin-bottom: 32px; }
 .grilla { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; }
 h1 { font-size: clamp(34px, 5vw, 52px); margin: 12px 0; font-weight: 800; letter-spacing: -.02em; }
 h1 em { font-style: normal; color: var(--naranja); }
-.cabecera p { color: #c9ccd6; font-size: 17px; max-width: 600px; margin: 0 0 20px; }
-.cabecera .proximo { font-size: 15px; color: #8d92a0; margin-top: -8px; }
-.cabecera .proximo strong { color: #fff; }
+.cabecera p { color: var(--sobre-oscuro-2); font-size: 17px; max-width: 600px; margin: 0 0 20px; }
+.cabecera .proximo { font-size: 15px; color: var(--sobre-oscuro-3); margin-top: -8px; }
+.cabecera .proximo strong { color: var(--sobre-oscuro); }
 .cabecera .aviso { font-size: 14px; color: #f3c79c; }
 .anillo { position: relative; width: 210px; height: 210px; }
 .anillo svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -165,7 +168,7 @@ h1 em { font-style: normal; color: var(--naranja); }
 .seg-on { stroke: var(--naranja); }
 .numero { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
 .numero strong { font-size: 56px; line-height: 1; font-variant-numeric: tabular-nums; }
-.numero span { color: #8d92a0; font-size: 14px; }
+.numero span { color: var(--sobre-oscuro-3); font-size: 14px; }
 
 .cuerpo { padding: 20px 0 80px; }
 .subtitulo { font-size: 24px; margin: 40px 0 8px; }
@@ -178,11 +181,11 @@ h1 em { font-style: normal; color: var(--naranja); }
 }
 .escalera li:nth-child(1) { min-height: 140px; } .escalera li:nth-child(2) { min-height: 160px; } .escalera li:nth-child(3) { min-height: 180px; }
 .escalera li:nth-child(4) { min-height: 200px; } .escalera li:nth-child(5) { min-height: 220px; }
-.esc-num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #efede8; font-weight: 800; margin-bottom: auto; }
+.esc-num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--relleno); font-weight: 800; margin-bottom: auto; }
 .escalera h3 { font-size: 16px; margin: 14px 0 10px; }
-.alcanzado { background: #fff4ea; border-color: #f7c08c; }
+.alcanzado { background: var(--naranja-suave); border-color: var(--naranja-borde); }
 .alcanzado .esc-num { background: var(--naranja); color: #fff; }
-.barra { height: 8px; border-radius: 999px; background: #efede8; overflow: hidden; }
+.barra { height: 8px; border-radius: 999px; background: var(--relleno); overflow: hidden; }
 .barra div { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--rojo), var(--naranja)); }
 
 /* Informe bloqueado: vista previa difuminada + tarjeta para agendar. */
@@ -195,20 +198,20 @@ h1 em { font-style: normal; color: var(--naranja); }
 .card p { margin: 0; color: var(--tinta-2); font-size: 15px; }
 .matriz { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
 .fila { display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 6px; }
-.etiqueta-fila { height: 34px; border-radius: 8px; background: #e2dfd8; }
+.etiqueta-fila { height: 34px; border-radius: 8px; background: var(--borde-fuerte); }
 .celda { height: 34px; border-radius: 8px; }
-.celda.si { background: var(--naranja); } .celda.parcial { background: #fbd3ad; } .celda.no { background: #ece9e3; }
+.celda.si { background: var(--naranja); } .celda.parcial { background: rgb(255 122 0 / .4); } .celda.no { background: var(--relleno); }
 
 .candado {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: min(560px, 100% - 32px); background: var(--oscuro); color: #fff; border-radius: 18px;
-  padding: 32px 36px; box-shadow: 0 24px 60px rgb(20 22 31 / .35); text-align: left;
+  width: min(560px, 100% - 32px); background: var(--oscuro); color: var(--sobre-oscuro); border: 1px solid var(--borde-oscuro); border-radius: 18px;
+  padding: 32px 36px; box-shadow: 0 24px 60px rgb(16 32 56 / .35); text-align: left;
 }
-.icono { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgb(255 124 0 / .16); color: var(--naranja); margin-bottom: 16px; }
+.icono { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: rgb(255 122 0 / .16); color: var(--naranja); margin-bottom: 16px; }
 .candado h2 { font-size: 26px; margin: 0 0 8px; }
-.candado p { color: #c9ccd6; margin: 0 0 12px; }
+.candado p { color: var(--sobre-oscuro-2); margin: 0 0 12px; }
 .candado ul { margin: 0 0 24px; padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
-.candado li { position: relative; padding-left: 26px; color: #dfe1e8; font-size: 15px; line-height: 1.45; }
+.candado li { position: relative; padding-left: 26px; color: var(--sobre-oscuro); font-size: 15px; line-height: 1.45; }
 .candado li::before {
   content: '✓'; position: absolute; left: 0; top: 1px; width: 18px; height: 18px; border-radius: 50%;
   display: grid; place-items: center; font-size: 11px; font-weight: 800; background: var(--naranja); color: #fff;

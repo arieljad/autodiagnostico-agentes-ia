@@ -51,7 +51,7 @@ function empezar(nueva) {
 <style scoped>
 .hero {
   position: relative; overflow: hidden; min-height: 100vh;
-  background: var(--oscuro); color: #fff; display: flex; align-items: center;
+  background: var(--oscuro); color: var(--sobre-oscuro); display: flex; align-items: center;
   padding: 72px 0;
 }
 .halo { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .45; }
@@ -61,9 +61,9 @@ function empezar(nueva) {
 .logo-hero { display: flex; width: fit-content; margin-bottom: 40px; }
 h1 { font-size: clamp(36px, 6vw, 64px); max-width: 820px; margin: 16px 0 20px; font-weight: 800; letter-spacing: -.02em; }
 h1 em { font-style: normal; color: var(--naranja); }
-.bajada { font-size: 18px; color: #c9ccd6; max-width: 640px; margin: 0 0 32px; }
+.bajada { font-size: 18px; color: var(--sobre-oscuro-2); max-width: 640px; margin: 0 0 32px; }
 .acciones { display: flex; gap: 12px; flex-wrap: wrap; }
-.boton.secundario.claro { color: #fff; border-color: rgb(255 255 255 / .3); }
+.boton.secundario.claro { color: var(--sobre-oscuro); border-color: rgb(255 255 255 / .3); }
 .boton.secundario.claro:hover { background: rgb(255 255 255 / .08); }
 .beneficios {
   list-style: none; padding: 0; margin: 48px 0 28px;
@@ -74,8 +74,8 @@ h1 em { font-style: normal; color: var(--naranja); }
   border-radius: var(--radio); background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .1);
   backdrop-filter: blur(6px);
 }
-.beneficios span { color: #b4b8c4; font-size: 14px; }
+.beneficios span { color: var(--sobre-oscuro-2); font-size: 14px; }
 .dimensiones { display: flex; flex-wrap: wrap; gap: 8px; max-width: 820px; }
-.chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .18); color: #dfe1e8; }
-.privacidad { margin-top: 28px; font-size: 13px; color: #8d92a0; max-width: 640px; }
+.chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgb(255 255 255 / .18); color: var(--sobre-oscuro); }
+.privacidad { margin-top: 28px; font-size: 13px; color: var(--sobre-oscuro-3); max-width: 640px; }
 </style>

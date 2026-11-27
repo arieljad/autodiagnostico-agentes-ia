@@ -137,7 +137,7 @@ function anterior() {
 </template>
 
 <style scoped>
-.barra { position: sticky; top: 0; z-index: 5; background: rgb(246 245 242 / .92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde); }
+.barra { position: sticky; top: 0; z-index: 5; background: var(--barra-fondo); backdrop-filter: blur(8px); border-bottom: 1px solid var(--borde); }
 .fila { display: flex; justify-content: space-between; align-items: center; height: 60px; }
 .izquierda { display: flex; align-items: center; gap: 14px; }
 .separador { width: 1px; height: 22px; background: var(--borde); }
@@ -152,8 +152,8 @@ h1 { font-size: clamp(28px, 4vw, 38px); margin: 10px 0 12px; letter-spacing: -.0
 .descripcion { color: var(--tinta-2); margin: 0 0 8px; font-size: 16px; }
 .preguntas { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
 .intro { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
-.definicion { background: var(--oscuro); color: #fff; border-radius: var(--radio); padding: 26px 28px; }
-.definicion p { margin: 10px 0 0; font-size: 17px; color: #dfe1e8; }
+.definicion { background: var(--oscuro); color: var(--sobre-oscuro); border: 1px solid var(--borde-oscuro); border-radius: var(--radio); padding: 26px 28px; }
+.definicion p { margin: 10px 0 0; font-size: 17px; color: var(--sobre-oscuro-2); }
 .definicion p + p { margin-top: 12px; }
 .definicion strong { color: var(--naranja); font-weight: 700; }
 .descripcion strong { color: var(--tinta); font-weight: 700; }
@@ -168,8 +168,8 @@ h1 { font-size: clamp(28px, 4vw, 38px); margin: 10px 0 12px; letter-spacing: -.0
 }
 .dentro { border-top: 3px solid var(--naranja); }
 .dentro li::before { content: '✓'; background: var(--naranja); }
-.fuera li::before { content: '–'; background: #b9b6af; }
-.cierre { margin: 4px 0 0; padding: 16px 20px; border-radius: 10px; background: #fff4ea; color: var(--tinta); font-size: 15px; }
+.fuera li::before { content: '–'; background: var(--borde-fuerte); }
+.cierre { margin: 4px 0 0; padding: 16px 20px; border-radius: 10px; background: var(--naranja-suave); color: var(--tinta); font-size: 15px; }
 @media (max-width: 640px) { .alcances { grid-template-columns: 1fr; } }
 .navegacion { display: flex; justify-content: space-between; margin-top: 32px; }
 .error-envio { color: var(--rojo); font-weight: 600; margin-top: 24px; }

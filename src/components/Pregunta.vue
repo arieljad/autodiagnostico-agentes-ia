@@ -66,20 +66,20 @@ legend + * { clear: both; }
 .opciones.compacta { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
 .opcion {
   display: flex; align-items: flex-start; gap: 12px; text-align: left;
-  padding: 13px 16px; border-radius: 10px; border: 1px solid var(--borde); background: #fbfaf8;
+  padding: 13px 16px; border-radius: 10px; border: 1px solid var(--borde); background: var(--relleno);
   font: inherit; font-size: 15px; color: var(--tinta); cursor: pointer; transition: border-color .12s, background .12s;
 }
-.opcion:hover { border-color: #f3b57a; background: #fff; }
-.opcion.marcada { border-color: var(--naranja); background: #fff4ea; }
-.marca { flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; border: 2px solid #c6c3bd; position: relative; }
+.opcion:hover { border-color: var(--naranja-borde); }
+.opcion.marcada { border-color: var(--naranja); background: var(--naranja-suave); }
+.marca { flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%; border: 2px solid var(--borde-fuerte); position: relative; }
 .multiple .marca { border-radius: 5px; }
-.marcada .marca { border-color: var(--naranja); background: var(--naranja); box-shadow: inset 0 0 0 3px #fff4ea; }
+.marcada .marca { border-color: var(--naranja); background: var(--naranja); box-shadow: inset 0 0 0 3px var(--tarjeta); }
 .multiple.marcada .marca { box-shadow: none; }
 .multiple.marcada .marca::after { content: ''; position: absolute; left: 4px; top: 0; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 input, textarea {
   width: 100%; margin-top: 22px; padding: 13px 16px; border-radius: 10px; border: 1px solid var(--borde);
-  font: inherit; font-size: 15px; background: #fbfaf8; resize: vertical;
+  font: inherit; font-size: 15px; background: var(--relleno); color: var(--tinta); resize: vertical;
 }
-input:focus, textarea:focus { outline: none; border-color: var(--naranja); background: #fff; }
+input:focus, textarea:focus { outline: none; border-color: var(--naranja); background: var(--tarjeta); }
 .error { margin: 10px 0 0; color: var(--rojo); font-size: 14px; font-weight: 600; }
 </style>

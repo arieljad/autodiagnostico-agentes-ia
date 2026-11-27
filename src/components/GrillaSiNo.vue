@@ -40,7 +40,7 @@ const corta = (t) => (t.startsWith('No sé') ? 'No sé' : t)
 .encabezado, .fila { display: grid; grid-template-columns: 1fr 210px; align-items: center; gap: 16px; }
 .encabezado { padding: 10px 0; border-bottom: 1px solid var(--borde); }
 .col { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--tinta-3); }
-.fila { padding: 16px 0; border-bottom: 1px solid #f0eee9; }
+.fila { padding: 16px 0; border-bottom: 1px solid var(--borde); }
 .fila:last-child { border-bottom: 0; }
 .fila.conError .texto { color: var(--rojo); }
 .texto { font-size: 16px; font-weight: 600; line-height: 1.4; }
@@ -49,16 +49,16 @@ const corta = (t) => (t.startsWith('No sé') ? 'No sé' : t)
 .obligatoria { color: var(--rojo); margin-left: 4px; }
 .opciones { display: grid; grid-template-columns: repeat(3, 70px); justify-items: center; }
 .opcion { display: grid; place-items: center; width: 44px; height: 44px; border: 0; background: transparent; cursor: pointer; border-radius: 50%; }
-.opcion:hover { background: #fff4ea; }
-.marca { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #c6c3bd; }
-.marcada .marca { border-color: var(--naranja); background: var(--naranja); box-shadow: inset 0 0 0 3px #fff; }
+.opcion:hover { background: var(--naranja-suave); }
+.marca { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--borde-fuerte); }
+.marcada .marca { border-color: var(--naranja); background: var(--naranja); box-shadow: inset 0 0 0 3px var(--tarjeta); }
 .etiqueta-movil { display: none; }
 @media (max-width: 640px) {
   .encabezado { display: none; }
   .fila { grid-template-columns: 1fr; gap: 10px; }
   .opciones { grid-template-columns: repeat(3, 1fr); gap: 8px; justify-items: stretch; }
   .opcion { width: auto; height: auto; border-radius: 10px; border: 1px solid var(--borde); padding: 10px; display: flex; gap: 8px; justify-content: center; }
-  .marcada { border-color: var(--naranja); background: #fff4ea; }
+  .marcada { border-color: var(--naranja); background: var(--naranja-suave); }
   .etiqueta-movil { display: inline; font-size: 14px; }
 }
 </style>
