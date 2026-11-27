@@ -93,10 +93,13 @@ export const ENCUESTA = {
       id: 'alcance',
       titulo: 'Alcance del diagnóstico · La capa agéntica',
       descripcion:
-        'Antes de empezar, alineamos qué vamos a evaluar. Este diagnóstico no mide el uso de la IA en general: se enfoca en la capa agéntica de tu organización.',
+        'Antes de empezar, alineamos qué vamos a evaluar. Este diagnóstico no mide el uso de la IA en general: se enfoca en la **capa agéntica** de tu organización.',
       intro: {
-        definicion:
-          'Un agente de IA usa un modelo de lenguaje para planificar, consultar información interna de la empresa y ejecutar acciones en otros sistemas, con un objetivo de negocio concreto. Un modelo solo genera respuestas a partir de lo que se le pide; un agente decide qué herramientas usar y actúa.',
+        // Párrafos; el texto entre ** ** se muestra resaltado.
+        definicion: [
+          'Un **agente de IA** combina modelos de lenguaje, acceso a datos y capacidad de acción para ejecutar tareas orientadas a un objetivo de negocio.',
+          'La **capa agéntica** es el entorno donde múltiples agentes colaboran, comparten contexto y operan bajo mecanismos de gobierno, seguridad, auditoría y monitoreo que permiten controlar resultados, riesgos y costos.',
+        ],
         enAlcance: [
           'Asistentes configurados con instrucciones propias y conectados a documentos o sistemas de la empresa',
           'Agentes que ejecutan tareas o transacciones, con o sin aprobación humana',

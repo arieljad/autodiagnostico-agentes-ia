@@ -13,6 +13,9 @@ const errores = ref({})
 const enviando = ref(false)
 const errorEnvio = ref('')
 
+// Divide un texto en tramos normales y resaltados (los que van entre ** **).
+const partes = (texto) => texto.split(/\*\*(.+?)\*\*/).map((t, i) => ({ texto: t, fuerte: i % 2 === 1 })).filter((t) => t.texto)
+
 const seccion = computed(() => store.seccionActual)
 const total = computed(() => store.secciones.length)
 const esUltima = computed(() => store.paso >= total.value - 1)
@@ -85,12 +88,16 @@ function anterior() {
         <section :key="seccion.id">
           <span class="etiqueta">{{ seccion.dimension ? 'Dimensión' : seccion.id === 'contacto' ? 'Para terminar' : 'Contexto' }}</span>
           <h1>{{ seccion.titulo }}</h1>
-          <p v-if="seccion.descripcion" class="descripcion">{{ seccion.descripcion }}</p>
+          <p v-if="seccion.descripcion" class="descripcion">
+            <template v-for="(t, i) in partes(seccion.descripcion)" :key="i"><strong v-if="t.fuerte">{{ t.texto }}</strong><template v-else>{{ t.texto }}</template></template>
+          </p>
 
           <div v-if="seccion.intro" class="intro">
             <div class="definicion">
               <span class="etiqueta">¿Qué entendemos por agente de IA?</span>
-              <p>{{ seccion.intro.definicion }}</p>
+              <p v-for="parrafo in seccion.intro.definicion" :key="parrafo">
+                <template v-for="(t, i) in partes(parrafo)" :key="i"><strong v-if="t.fuerte">{{ t.texto }}</strong><template v-else>{{ t.texto }}</template></template>
+              </p>
             </div>
             <div class="alcances">
               <div class="alcance dentro">
@@ -147,6 +154,9 @@ h1 { font-size: clamp(28px, 4vw, 38px); margin: 10px 0 12px; letter-spacing: -.0
 .intro { display: flex; flex-direction: column; gap: 16px; margin-top: 28px; }
 .definicion { background: var(--oscuro); color: #fff; border-radius: var(--radio); padding: 26px 28px; }
 .definicion p { margin: 10px 0 0; font-size: 17px; color: #dfe1e8; }
+.definicion p + p { margin-top: 12px; }
+.definicion strong { color: var(--naranja); font-weight: 700; }
+.descripcion strong { color: var(--tinta); font-weight: 700; }
 .alcances { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .alcance { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 22px 24px; }
 .alcance h2 { font-size: 16px; margin-bottom: 14px; }
